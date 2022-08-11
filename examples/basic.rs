@@ -22,20 +22,18 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
     // per layer, each with their own `TileStorage` component.
     let mut tile_storage = TileStorage::empty(tilemap_size);
 
-    // Spawn the elements of the tilemap.
-    for x in 0..32u32 {
-        for y in 0..32u32 {
-            let tile_pos = TilePos { x, y };
-            let tile_entity = commands
-                .spawn()
-                .insert_bundle(TileBundle {
-                    position: tile_pos,
-                    tilemap_id: TilemapId(tilemap_entity),
-                    ..Default::default()
-                })
-                .id();
-            tile_storage.set(&tile_pos, Some(tile_entity));
-        }
+    for i in 0..6 {
+        let tile_pos = TilePos{x: i, y: i};
+        let tile_entity = commands
+            .spawn()
+            .insert_bundle(TileBundle{
+                position: tile_pos,
+                texture: TileTexture(i),
+                tilemap_id: TilemapId(tilemap_entity),
+                ..Default::default()
+            })
+            .id();
+        tile_storage.set(&tile_pos, Some(tile_entity));
     }
 
     let tile_size = TilemapTileSize { x: 16.0, y: 16.0 };
@@ -43,7 +41,7 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .entity(tilemap_entity)
         .insert_bundle(TilemapBundle {
-            grid_size: TilemapGridSize { x: 16.0, y: 16.0 },
+            grid_size: TilemapGridSize { x: 8.0, y: 8.0 },
             size: tilemap_size,
             storage: tile_storage,
             texture: TilemapTexture(texture_handle),
